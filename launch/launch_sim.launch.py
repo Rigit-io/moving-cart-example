@@ -50,7 +50,7 @@ def generate_launch_description():
             PathJoinSubstitution([FindExecutable(name="xacro")]),
             " ",
             PathJoinSubstitution(
-                [FindPackageShare("moving-cart-example"), "urdf", "two_wheel_cart.urdf"]
+                [FindPackageShare("moving_cart_example"), "urdf", "two_wheel_cart.urdf"]
             ),
             " ",
             "use_mock_hardware:=",
@@ -61,7 +61,7 @@ def generate_launch_description():
 
     twist_mux_params = PathJoinSubstitution(
         [
-            FindPackageShare("moving-cart-example"),
+            FindPackageShare("moving_cart_example"),
             "config",
             "twist_mux.yaml",
         ]
@@ -75,7 +75,7 @@ def generate_launch_description():
     
     robot_controllers = PathJoinSubstitution(
         [
-            FindPackageShare("moving-cart-example"),
+            FindPackageShare("moving_cart_example"),
             "config",
             "my_controllers.yaml",
         ]
@@ -88,7 +88,7 @@ def generate_launch_description():
         output="both",
         remappings=[
             ("~/robot_description", "/robot_description"),
-            ("/diffbot_base_controller/cmd_vel", "/cmd_vel"),
+            ("/diffbot_base_controller/cmd_vel_unstamped", "/cmd_vel"),
         ],
     )
     robot_state_pub_node = Node(
@@ -98,6 +98,12 @@ def generate_launch_description():
         parameters=[robot_description],
     )
     
+    teleop_controls_gui_node = Node(
+        package="moving_cart_example",
+        executable="teleop_controls_gui",
+        name="teleop_controls_gui",
+        output="screen"
+    )
 
     joint_state_broadcaster_spawner = Node(
         package="controller_manager",
@@ -126,6 +132,7 @@ def generate_launch_description():
         twist_mux,
         robot_controller_spawner,
         delay_joint_state_broadcaster_after_robot_controller_spawner,
+        teleop_controls_gui_node
     ]
 
     return LaunchDescription(declared_arguments + nodes)

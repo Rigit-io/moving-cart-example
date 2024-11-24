@@ -17,7 +17,7 @@ def generate_launch_description():
     use_ros2_control = LaunchConfiguration('use_ros2_control')
 
     # Process the URDF file
-    pkg_path = os.path.join(get_package_share_directory('moving-cart-example'))
+    pkg_path = os.path.join(get_package_share_directory('moving_cart_example'))
     xacro_file = os.path.join(pkg_path,'urdf','two_wheel_cart.urdf')
     # robot_description_config = xacro.process_file(xacro_file).toxml()
     robot_description_config = Command(['xacro ', xacro_file])
